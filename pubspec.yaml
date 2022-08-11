@@ -1,7 +1,8 @@
 name: grid_board
-description: A new Flutter package project.
+description: A Widget that has child items in a grid view and can be modified with animation effects
 version: 0.0.1
-homepage: https://gitlab.com/turkiye/agtr/grid_board.git
+homepage: https://gitlab.com/turkiye/flutter/grid_board.git
+publish_to: 'none'
 
 environment:
   sdk: ">=2.17.1 <3.0.0"
@@ -16,10 +17,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter packages.
 flutter:
 
   # To add assets to your package, add an assets section, like this:
