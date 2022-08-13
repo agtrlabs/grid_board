@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:grid_board/src/grid_cell_status.dart';
 import '../src/grid_board_properties.dart';
 import '../src/grid_cell.dart';
 import '../src/value_objects/move_to_data.dart';
@@ -19,25 +21,39 @@ class GridBoardController extends ChangeNotifier {
   void updateMoved(MoveToData moved) {
     moveToList.removeWhere((element) => element == moved);
     var temp;
-    temp = cells[moved.from].index;
-    cells[moved.from].index = cells[moved.to].index;
-    cells[moved.to].index = temp;
-    
+    temp = cells[moved.from];
+    cells[moved.from] = cells[moved.to];
+    cells[moved.to] = temp;
   }
 
   void resetCells(int cellCount) {
     cells = List.generate(
       cellCount,
-      (index) => LetterBox(index: index, stringValue: index.toString()),
+      (index) => GridCell(
+        gridCellChildMap: {
+          GridCellStatus.initial: Container(
+            key: ValueKey(index + 1),
+            width: 800,
+            color: Colors.red,
+            child: FittedBox(child: Text('$index')),
+          ),
+          GridCellStatus.selected: Container(
+              width: 800,
+              key: ValueKey(index + 2),
+              color: Colors.green,
+              child: FittedBox(child: Text('${index + 16}'))),
+        },
+      ),
     );
     for (var i = 0; i < cellCount; i++) {
       cellPositions[i] = i;
+      //cells[i].updateStatus(GridCellStatus.initial);
     }
   }
 
   /// get the Grid cell at index
   List<GridCell> cellAt(int index) {
-    return cells.where((element) => element.index == index).toList();
+    return cells.where((element) => element.hashCode == index).toList();
   }
 
   // returns where to move the element at fromIndex
@@ -58,7 +74,18 @@ class GridBoardController extends ChangeNotifier {
     rotation.remove(index);
   }
 
-  GridBoardController({required this.gridBoardProperties}) {
-    resetCells(gridBoardProperties.gridSize.cellCount);
+  void updateCellStatus(int index, GridCellStatus status) {
+    cells[index].updateStatus(status);
+  }
+
+  GridBoardController(
+      {required this.gridBoardProperties, List<GridCell>? cells}) {
+    if (cells == null) {
+      resetCells(gridBoardProperties.gridSize.cellCount);
+    } else {
+      this.cells = cells;
+    }
+
+    print('gridBoardController Create');
   }
 }

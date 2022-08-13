@@ -5,6 +5,7 @@ import 'package:grid_board/grid_board.dart';
 
 
 
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -14,7 +15,9 @@ class HomePage extends StatelessWidget {
     GridBoardProperties gridBoardProperties =
         GridBoardProperties(gridSize: gridSize);
     GridBoardController gridBoardController =
-        GridBoardController(gridBoardProperties: gridBoardProperties);
+        GridBoardController(
+      gridBoardProperties: gridBoardProperties,
+    );
 
     /*for (var i = 0; i < gridSize.cellCount; i++) {
       var cell = GridCell(index: i, stringValue: i.toStringAsFixed(2), child: );
@@ -73,6 +76,19 @@ class HomePage extends StatelessWidget {
                       gridBoardController.rotate(idx);
                     },
                     child: Text('Rotate a cell'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      var rnd = Random(DateTime.now().millisecond);
+                      int idx = rnd.nextInt(gridSize.cellCount);
+                      int status = rnd.nextInt(GridCellStatus.values.length);
+
+                      print(
+                          "Update gridBoardController.updateCellStatus($idx,${GridCellStatus.values[status]});");
+                      gridBoardController.updateCellStatus(
+                          idx, GridCellStatus.values[status]);
+                    },
+                    child: Text('Update Status of a cell'),
                   ),
                 ],
               ),

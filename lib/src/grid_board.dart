@@ -224,7 +224,7 @@ class _GridBoardState extends State<GridBoard> {
             child: SizedBox(
               width: widget.cellSize.width,
               height: widget.cellSize.height,
-              child: currentCell.child,
+              child: currentCell,
             ),
           )));
     }
