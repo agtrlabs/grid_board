@@ -63,29 +63,17 @@ class _GridBoardState extends State<GridBoard> {
   void _calcIndexCellPositions() {
     indexLocations = [];
     for (var i = 0;
-        i < widget.gridSize.colCount * widget.gridSize.rowCount;
+        i < widget.gridSize.cellCount;
         i++) {
-      int indexX = indexToPositionX(i);
-      double posx =
-          indexX * widget.cellSize.width + (indexX + 1) * widget.margin;
-      int indexY = indexToPositionY(i);
-      double posy =
-          indexY * widget.cellSize.height + (indexY + 1) * widget.margin;
+      
+      final pos = GridPosition.fromIndex(widget.gridSize, i);
 
-      indexLocations.add(Offset(posx, posy));
+      double offsetX =
+          pos.columnIndex * widget.cellSize.width + (pos.columnIndex + 1) * widget.margin;
+      double offsetY =
+          pos.rowIndex * widget.cellSize.height + (pos.rowIndex + 1) * widget.margin;
+      indexLocations.add(Offset(offsetX, offsetY));
     }
-  }
-
-  int positionToIndex(int col, int row) {
-    return row * widget.gridSize.colCount + col * widget.gridSize.rowCount;
-  }
-
-  int indexToPositionX(int index) {
-    return index % widget.gridSize.colCount;
-  }
-
-  int indexToPositionY(int index) {
-    return (index / widget.gridSize.colCount).floor();
   }
 
   @override
@@ -151,9 +139,7 @@ class _GridBoardState extends State<GridBoard> {
 
         if (index >= 0) {
           widget.onTap?.call(GridTapDetails(
-              gridPosition: GridPosition(
-                  columnIndex: indexToPositionX(index),
-                  rowIndex: indexToPositionY(index)),
+              gridPosition: GridPosition.fromIndex(widget.gridSize, index),
               index: index));
         }
       },

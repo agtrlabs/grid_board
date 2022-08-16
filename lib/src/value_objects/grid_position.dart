@@ -15,7 +15,7 @@ class GridPosition {
     return (size.colCount * rowIndex) + columnIndex;
   }
 
-  GridPosition fromIndex(GridSize size, int index) {
+  factory GridPosition.fromIndex(GridSize size, int index) {
     int row = index % size.colCount;
     int col = index - (row * size.colCount);
     return GridPosition(columnIndex: col, rowIndex: row);
