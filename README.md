@@ -1,5 +1,4 @@
 
-
 GridBoard is a widget that has child items in a grid view and can be modified with animation effects
 
 ## Features
@@ -12,7 +11,7 @@ GridBoard is a widget that has child items in a grid view and can be modified wi
 ## Usage
 
 To use this widget, add grid_board as a dependency in your pubspec.yaml file.
-See example project for more details.
+See [/example](/example) project for more details.
 
 
 ## Additional information
