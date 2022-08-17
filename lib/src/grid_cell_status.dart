@@ -1,0 +1,4 @@
+enum GridCellStatus {
+  initial,
+  selected,
+}
