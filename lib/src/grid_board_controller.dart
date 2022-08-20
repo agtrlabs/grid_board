@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:grid_board/src/grid_cell_status.dart';
-import '../src/grid_board_properties.dart';
-import '../src/grid_cell.dart';
-import '../src/value_objects/move_to_data.dart';
+
+import '../grid_board.dart';
+
 
 class GridBoardController extends ChangeNotifier {
   List<GridCell> cells = [];
@@ -76,6 +74,10 @@ class GridBoardController extends ChangeNotifier {
 
   void updateCellStatus(int index, GridCellStatus status) {
     cells[index].updateStatus(status);
+  }
+
+  Map<GridPosition, CellValue> values() {
+    return {};
   }
 
   GridBoardController(
