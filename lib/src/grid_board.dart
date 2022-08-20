@@ -69,9 +69,11 @@ class _GridBoardState extends State<GridBoard> {
       final pos = GridPosition.fromIndex(widget.gridSize, i);
 
       double offsetX =
-          pos.columnIndex * widget.cellSize.width + (pos.columnIndex + 1) * widget.margin;
+          (pos.columnIndex * widget.cellSize.width) +
+          ((pos.columnIndex + 1) * widget.margin);
       double offsetY =
-          pos.rowIndex * widget.cellSize.height + (pos.rowIndex + 1) * widget.margin;
+          (pos.rowIndex * widget.cellSize.height) +
+          ((pos.rowIndex + 1) * widget.margin);
       indexLocations.add(Offset(offsetX, offsetY));
     }
   }
