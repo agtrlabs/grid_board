@@ -2,25 +2,39 @@ import 'package:flutter/material.dart';
 
 import '../grid_board.dart';
 
-
 class GridBoardController extends ChangeNotifier {
   List<GridCell> cells = [];
   List<MoveToData> moveToList = [];
+
+  /// Map for "Gridcell index" to "rotation"
   Map<int, double> rotation = {};
+
+  /// Map for "Gridcell index" to "Position index"
   Map<int, int> cellPositions = {};
+
   final GridBoardProperties gridBoardProperties;
 
-  void move(int fromIndex, int toIndex, {Curve curve = Curves.elasticInOut}) {
+  void moveItem(int fromIndex, int toIndex,
+      {Curve curve = Curves.elasticInOut}) {
     moveToList.add(MoveToData(fromIndex, toIndex, curve: curve));
     cellPositions[fromIndex] = toIndex;
     notifyListeners();
   }
 
+  void moveAllAt(int fromIndex, int toIndex,
+      {Curve curve = Curves.elasticInOut}) {
+    cellPositions.forEach((key, value) {
+      if (value == fromIndex) {
+        moveItem(key, toIndex);
+      }
+    });
+  }
+
   void updateMoved(MoveToData moved) {
     moveToList.removeWhere((element) => element == moved);
     var temp;
-    temp = cells[moved.from];
-    cells[moved.from] = cells[moved.to];
+    temp = cells[moved.item];
+    cells[moved.item] = cells[moved.to];
     cells[moved.to] = temp;
   }
 
@@ -43,7 +57,10 @@ class GridBoardController extends ChangeNotifier {
         },
       ),
     );
-    for (var i = 0; i < cellCount; i++) {
+  }
+
+  void initialPositions() {
+    for (var i = 0; i < cells.length; i++) {
       cellPositions[i] = i;
       //cells[i].updateStatus(GridCellStatus.initial);
     }
@@ -58,7 +75,7 @@ class GridBoardController extends ChangeNotifier {
   // if it doesn't in te moveToList function returns -1
   int whereToMove(int fromIndex) {
     return moveToList
-        .firstWhere((e) => e.from == fromIndex,
+        .firstWhere((e) => e.item == fromIndex,
             orElse: () => MoveToData(fromIndex, -1))
         .to;
   }
@@ -87,6 +104,7 @@ class GridBoardController extends ChangeNotifier {
     } else {
       this.cells = cells;
     }
+    initialPositions();
 
     print('gridBoardController Create');
   }
