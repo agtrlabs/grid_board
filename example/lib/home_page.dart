@@ -19,16 +19,28 @@ class HomePage extends StatelessWidget {
           GridCellStatus.initial: Container(
             key: ValueKey(index + 1),
             width: 800,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Color(0x99CC3366),
+              borderRadius: BorderRadius.all(Radius.circular(24.0)),
+              border: Border.all(
+                style: BorderStyle.solid,
+                color: Color(0xFF000000),
+              ),
+              
             ),
-            child: FittedBox(child: Text(char)),
+            //child: FittedBox(child: Text(char)),
           ),
           GridCellStatus.selected: Container(
             width: 800,
             key: ValueKey(index + 2),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Color(0x9922AB50),
+              
+              borderRadius: BorderRadius.all(Radius.circular(24.0)),
+              border: Border.all(
+                style: BorderStyle.solid,
+                color: Color(0xFF000000),
+              ),
             ),
             child: FittedBox(child: Text(char)),
           ),
@@ -62,11 +74,11 @@ class HomePage extends StatelessWidget {
             ),
             Expanded(
               child: GridBoard(
-                debugmode: true,
+                debugmode: false,
                 controller: gridBoardController,
                 size: Size(square, square),
                 gridSize: gridSize,
-                margin: 0,
+                margin: 10,
                 onTap: (details) {
                   print("index: ${details.index}");
                   print("grid position: ${details.gridPosition}");
