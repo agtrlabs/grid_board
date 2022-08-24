@@ -88,53 +88,60 @@ class HomePage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              child: Wrap(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      
-                      int from = rnd.nextInt(gridSize.cellCount);
-                      int to = rnd.nextInt(gridSize.cellCount);
-                      print(
-                          "Send move cmd to controller gridBoardController.move($from, $to);");
-                      gridBoardController.moveItem(from, to);
-                    },
-                    child: Text('Move an item'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        int from = rnd.nextInt(gridSize.cellCount);
+                        int to = rnd.nextInt(gridSize.cellCount);
+                        print(
+                            "Send move cmd to controller gridBoardController.move($from, $to);");
+                        gridBoardController.moveItem(from, to);
+                      },
+                      child: Text('Move an item'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      
-                      int from = rnd.nextInt(gridSize.cellCount);
-                      int to = rnd.nextInt(gridSize.cellCount);
-                      print(
-                          "Send move cmd to controller gridBoardController.move($from, $to);");
-                      gridBoardController.moveAllAt(from, to);
-                    },
-                    child: Text('Move All'),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        int from = rnd.nextInt(gridSize.cellCount);
+                        int to = rnd.nextInt(gridSize.cellCount);
+                        print(
+                            "Send move cmd to controller gridBoardController.move($from, $to);");
+                        gridBoardController.moveAllAt(from, to);
+                      },
+                      child: Text('Move All'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      
-                      int idx = rnd.nextInt(gridSize.cellCount);
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        int idx = rnd.nextInt(gridSize.cellCount);
 
-                      print("Rotate gridBoardController.rotate($idx);");
-                      gridBoardController.rotate(idx);
-                    },
-                    child: Text('Rotate an item'),
+                        print("Rotate gridBoardController.rotate($idx);");
+                        gridBoardController.rotate(idx);
+                      },
+                      child: Text('Rotate an item'),
+                    ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      
-                      int idx = rnd.nextInt(gridSize.cellCount);
-                      int status = rnd.nextInt(GridCellStatus.values.length);
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        int idx = rnd.nextInt(gridSize.cellCount);
+                        int status = rnd.nextInt(GridCellStatus.values.length);
 
-                      print(
-                          "Update gridBoardController.updateCellStatus($idx,${GridCellStatus.values[status]});");
-                      gridBoardController.updateCellStatus(
-                          idx, GridCellStatus.values[status]);
-                    },
-                    child: Text('Update Status'),
+                        print(
+                            "Update gridBoardController.updateCellStatus($idx,${GridCellStatus.values[status]});");
+                        gridBoardController.updateCellStatus(
+                            idx, GridCellStatus.values[status]);
+                      },
+                      child: Text('Update Status'),
+                    ),
                   ),
                 ],
               ),
