@@ -1,4 +1,3 @@
-
 GridBoard is a widget that has child items in a grid view and can be modified with animation effects
 
 ## Features
@@ -19,3 +18,5 @@ See [/example](/example) project for more details.
 TODO: Tell users more about the package: where to find more information, how to 
 contribute to the package, how to file issues, what response they can expect 
 from the package authors, and more.
+
+TODO: Need more Api Documentation
