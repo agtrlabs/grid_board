@@ -6,7 +6,6 @@ import 'package:grid_board/src/grid_board_properties.dart';
 void main() {
   test('Gridboard init test', () {
     final gridBoard = GridBoard(
-      size: const Size(0, 0),
       controller: GridBoardController(
         gridBoardProperties: GridBoardProperties(
           gridSize: const GridSize(4, 4),

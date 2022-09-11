@@ -20,11 +20,11 @@ class HomePage extends StatelessWidget {
             key: ValueKey(index + 1),
             width: 800,
             decoration: BoxDecoration(
-              color: Color(0x99CC3366),
-              borderRadius: BorderRadius.all(Radius.circular(24.0)),
+              color: const Color(0x99CC3366),
+              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
               border: Border.all(
                 style: BorderStyle.solid,
-                color: Color(0xFF000000),
+                color: const Color(0xFF000000),
               ),
               
             ),
@@ -34,12 +34,12 @@ class HomePage extends StatelessWidget {
             width: 800,
             key: ValueKey(index + 2),
             decoration: BoxDecoration(
-              color: Color(0x9922AB50),
+              color: const Color(0x9922AB50),
               
-              borderRadius: BorderRadius.all(Radius.circular(24.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(24.0)),
               border: Border.all(
                 style: BorderStyle.solid,
-                color: Color(0xFF000000),
+                color: const Color(0xFF000000),
               ),
             ),
             child: FittedBox(child: Text(char)),
@@ -60,10 +60,7 @@ class HomePage extends StatelessWidget {
     }*/
 
     return Scaffold(
-      body: LayoutBuilder(builder: (context, boxCints) {
-        print('Screen resized!');
-        double square = min(boxCints.maxWidth, boxCints.maxHeight);
-        return Column(
+      body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
@@ -74,14 +71,13 @@ class HomePage extends StatelessWidget {
             ),
             Expanded(
               child: GridBoard(
-                debugmode: false,
+                debugMode: false,
                 controller: gridBoardController,
-                size: Size(square, square),
                 gridSize: gridSize,
                 margin: 10,
                 onTap: (details) {
-                  print("index: ${details.index}");
-                  print("grid position: ${details.gridPosition}");
+                  debugPrint("index: ${details.index}");
+                  debugPrint("grid position: ${details.gridPosition}");
                   gridBoardController.rotate(details.index);
                 },
               ),
@@ -96,11 +92,11 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         int from = rnd.nextInt(gridSize.cellCount);
                         int to = rnd.nextInt(gridSize.cellCount);
-                        print(
+                        debugPrint(
                             "Send move cmd to controller gridBoardController.move($from, $to);");
                         gridBoardController.moveItem(from, to);
                       },
-                      child: Text('Move an item'),
+                      child: const Text('Move an item'),
                     ),
                   ),
                   Padding(
@@ -109,11 +105,11 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         int from = rnd.nextInt(gridSize.cellCount);
                         int to = rnd.nextInt(gridSize.cellCount);
-                        print(
+                        debugPrint(
                             "Send move cmd to controller gridBoardController.move($from, $to);");
                         gridBoardController.moveAllAt(from, to);
                       },
-                      child: Text('Move All'),
+                      child: const Text('Move All'),
                     ),
                   ),
                   Padding(
@@ -122,10 +118,10 @@ class HomePage extends StatelessWidget {
                       onPressed: () {
                         int idx = rnd.nextInt(gridSize.cellCount);
 
-                        print("Rotate gridBoardController.rotate($idx);");
+                        debugPrint("Rotate gridBoardController.rotate($idx);");
                         gridBoardController.rotate(idx);
                       },
-                      child: Text('Rotate an item'),
+                      child: const Text('Rotate an item'),
                     ),
                   ),
                   Padding(
@@ -135,20 +131,19 @@ class HomePage extends StatelessWidget {
                         int idx = rnd.nextInt(gridSize.cellCount);
                         int status = rnd.nextInt(GridCellStatus.values.length);
 
-                        print(
+                        debugPrint(
                             "Update gridBoardController.updateCellStatus($idx,${GridCellStatus.values[status]});");
                         gridBoardController.updateCellStatus(
                             idx, GridCellStatus.values[status]);
                       },
-                      child: Text('Update Status'),
+                      child: const Text('Update Status'),
                     ),
                   ),
                 ],
               ),
             ),
           ],
-        );
-      }),
+        ),
     );
   }
 }
