@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
@@ -7,7 +9,6 @@ import 'value_objects/grid_size.dart';
 import 'grid_board_controller.dart';
 
 class GridBoard extends StatefulWidget {
-  final Size size;
   final Color backgroundColor;
   final GridSize gridSize;
   final double margin;
@@ -15,17 +16,16 @@ class GridBoard extends StatefulWidget {
   final GridBoardController controller;
 
   /// show border box
-  final bool debugmode;
+  final bool debugMode;
 
   const GridBoard({
     Key? key,
-    required this.size,
     this.backgroundColor = const Color.fromARGB(58, 19, 19, 19),
     this.gridSize = const GridSize(6, 6),
     this.margin = 10,
     this.onTap,
     required this.controller,
-    this.debugmode = false,
+    this.debugMode = false,
   }) : super(key: key);
 
   @override
@@ -33,58 +33,69 @@ class GridBoard extends StatefulWidget {
     return _GridBoardState();
   }
 
-  Size get cellSize {
-    double space = 0;
-    space = (gridSize.colCount + 1) * margin;
-    var cellWidth = (size.width - space) / gridSize.colCount;
-    space = (gridSize.rowCount + 1) * margin;
-    var cellHeight = (size.height - space) / gridSize.rowCount;
-    return Size(cellWidth, cellHeight);
-  }
 }
 
 class _GridBoardState extends State<GridBoard> {
-  late Size cellSize;
+
+  Size? size;
   late List<Offset> cellPositions;
   late List<double> cellRotations;
   late List<Offset> indexLocations;
+  int setter = 0;
 
   void _calcInitialCellPositions() {
-    cellPositions = [];
-    cellRotations = [];
 
-    for (var i = 0; i < indexLocations.length; i++) {
-      cellPositions.add(Offset(indexLocations[i].dx, indexLocations[i].dy));
-      cellRotations.add(0.0);
+    if(setter == 0) {
+      cellRotations = [];
+      cellPositions = [];
+    }
+
+    for (int i = 0; i < indexLocations.length; i++) {
+      final location = indexLocations[i];
+      if (setter == 0) {
+        cellRotations.add(0.0);
+        cellPositions.add(location);
+      } else {
+        cellPositions[i] = location;
+      }
+    }
+    Future.delayed(Duration.zero, () {
+      widget.controller.cellPositions.forEach((idx, newIdx) {
+        setState(() {
+          Offset newPosition = indexLocations[newIdx];
+          cellPositions[idx] = newPosition;
+        });
+      });
+    });
+    if(setter < 1) {
+      setter += 1;
     }
   }
 
   /// calculates screen positions of index cells
-  void _calcIndexCellPositions() {
+  void _calcIndexCellPositions({required Size cellSize}) {
     indexLocations = [];
-    for (var i = 0;
-        i < widget.gridSize.cellCount;
-        i++) {
-      
+    for (var i = 0; i < widget.gridSize.cellCount; i++) {
       final pos = GridPosition.fromIndex(widget.gridSize, i);
 
-      double offsetX =
-          (pos.columnIndex * widget.cellSize.width) +
+      double offsetX = (pos.columnIndex * cellSize.width) +
           ((pos.columnIndex + 1) * widget.margin);
-      double offsetY =
-          (pos.rowIndex * widget.cellSize.height) +
+      double offsetY = (pos.rowIndex * cellSize.height) +
           ((pos.rowIndex + 1) * widget.margin);
       indexLocations.add(Offset(offsetX, offsetY));
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    cellSize = widget.cellSize;
-    _calcIndexCellPositions();
+  void init({required Size cellSize}) {
+    _calcIndexCellPositions(cellSize: cellSize);
     _calcInitialCellPositions();
+  }
 
+  @override
+  initState() {
+    _calcIndexCellPositions(cellSize: const Size(10, 10));
+    _calcInitialCellPositions();
+    super.initState();
     if (widget.controller.cells.length != widget.gridSize.cellCount) {
       widget.controller.resetCells(widget.gridSize.cellCount);
     }
@@ -102,10 +113,13 @@ class _GridBoardState extends State<GridBoard> {
       }*/
 
       //check cells to move
-      widget.controller.cellPositions.forEach((idx, newidx) {
+      widget.controller.cellPositions.forEach((idx, newIdx) {
+        // debugPrint("controller positions --- {$idx: $newIdx}");
+        // debugPrint("board positions --- {$idx: ${cellPositions[idx]}}");
         setState(() {
-          Offset newPosition = indexLocations[newidx];
-          cellPositions[idx] = Offset(newPosition.dx, newPosition.dy);
+          Offset newPosition = indexLocations[newIdx];
+          cellPositions[idx] = newPosition;
+          // debugPrint("new positions --- {$idx: ${cellPositions[idx]}}");
         });
       });
 
@@ -116,7 +130,7 @@ class _GridBoardState extends State<GridBoard> {
         });
       });
 
-      print("Controller notified");
+      debugPrint("Controller notified");
     });
   }
 
@@ -128,9 +142,10 @@ class _GridBoardState extends State<GridBoard> {
 
   TapUpDetails _tapUpDetails = TapUpDetails(kind: PointerDeviceKind.unknown);
 
-  Widget _gestureDetector() {
+  Widget _gestureDetector({required Size cellSize}) {
     return GestureDetector(
       onTap: () {
+        debugPrint("Tapped!");
         Offset tapped = _tapUpDetails.localPosition;
         int index = cellPositions.indexWhere((element) {
           return (element.dx <= tapped.dx) &&
@@ -140,6 +155,7 @@ class _GridBoardState extends State<GridBoard> {
         });
 
         if (index >= 0) {
+          debugPrint("greater than 0");
           widget.onTap?.call(GridTapDetails(
               gridPosition: GridPosition.fromIndex(widget.gridSize, index),
               index: index));
@@ -158,49 +174,48 @@ class _GridBoardState extends State<GridBoard> {
     );
   }
 
-  Widget _background() {
+  Widget _background({required Size size}) {
     return Positioned(
         left: 0,
         top: 0,
         child: Container(
-          width: widget.size.width,
-          height: widget.size.height,
+          width: size.width,
+          height: size.height,
           color: widget.backgroundColor,
         ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print('Board rebuilded!');
-    _calcIndexCellPositions();
-
-    List<Widget> childs = [];
-
-    childs.add(_background());
-
-    if (widget.debugmode) {
-      for (var i = 0; i < indexLocations.length; i++) {
-        var cp = indexLocations[i];
-        var element = Positioned(
-          left: cp.dx,
-          top: cp.dy,
-          child: Container(
-            width: widget.cellSize.width,
-            height: widget.cellSize.height,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 255, 0, 0), // red as border color
-              ),
-            ),
+  Positioned indexLocationElement({required Offset cp, required Size cellSize}) {
+    return Positioned(
+      left: cp.dx,
+      top: cp.dy,
+      child: Container(
+        width: cellSize.width,
+        height: cellSize.height,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: const Color.fromARGB(255, 255, 0, 0),
           ),
-        );
-        childs.add(element);
+        ),
+      ),
+    );
+  }
+
+  List<Widget> rebuild({required Size size, required Size cellSize}){
+    List<Widget> children = [];
+
+    children.add(_background(size: size));
+
+    if (widget.debugMode) {
+      for (final location in indexLocations) {
+        final element = indexLocationElement(cp: location, cellSize: cellSize);
+        children.add(element);
       }
     }
     for (var i = 0; i < cellPositions.length; i++) {
       var currentCell = widget.controller.cells[i];
-
-      childs.add(AnimatedPositioned(
+      children.add(
+        AnimatedPositioned(
           left: cellPositions[i].dx,
           top: cellPositions[i].dy,
           curve: Curves.elasticInOut,
@@ -210,16 +225,43 @@ class _GridBoardState extends State<GridBoard> {
             curve: Curves.easeOutCubic,
             duration: const Duration(milliseconds: 600),
             child: SizedBox(
-              width: widget.cellSize.width,
-              height: widget.cellSize.height,
+              width: cellSize.width,
+              height: cellSize.height,
               child: currentCell,
             ),
-          )));
+          ),
+        ),
+      );
     }
+    children.add(_gestureDetector(cellSize: cellSize));
+    return children;
+  }
+  Size? _cellSize;
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (_, constraints) {
+          debugPrint("Board rebuilt");
+          double square = min(constraints.maxWidth, constraints.maxHeight);
+          final size = Size(square, square);
+          Size cellSize() {
+            double space = 0;
+            space = (widget.gridSize.colCount + 1) * widget.margin;
+            var cellWidth = (size.width - space) / widget.gridSize.colCount;
+            space = (widget.gridSize.rowCount + 1) * widget.margin;
+            var cellHeight = (size.height - space) / widget.gridSize.rowCount;
+            return Size(cellWidth, cellHeight);
+          }
+          if (_cellSize != cellSize()) {
+            _calcIndexCellPositions(cellSize: cellSize());
+            _calcInitialCellPositions();
+            _cellSize = cellSize();
+          }
+          return Stack(
+            children: rebuild(cellSize: cellSize(), size: size),
+          );
 
-    childs.add(_gestureDetector());
-    return Stack(
-      children: childs,
+        }
     );
   }
 }
