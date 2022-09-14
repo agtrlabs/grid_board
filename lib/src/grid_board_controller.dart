@@ -8,10 +8,11 @@ class GridBoardController extends ChangeNotifier {
   /// List of cells
   List<GridCell> get cells => _cells;
 
-  List<MoveToData> _moveToList = [];
+  final List<MoveToData> _moveToList = [];
+
   List<MoveToData> get moveToList => _moveToList;
 
-  Map<int, double> _rotation = {};
+  final Map<int, double> _rotation = {};
 
   /// Map for "Gridcell index" to "rotation"
   Map<int, double> get rotation => _rotation;
@@ -39,8 +40,7 @@ class GridBoardController extends ChangeNotifier {
 
   void updateMoved(MoveToData moved) {
     _moveToList.removeWhere((element) => element == moved);
-    var temp;
-    temp = cells[moved.item];
+    var temp = cells[moved.item];
     cells[moved.item] = cells[moved.to];
     cells[moved.to] = temp;
   }
@@ -112,7 +112,5 @@ class GridBoardController extends ChangeNotifier {
       _cells = cells;
     }
     initialPositions();
-
-    print('gridBoardController Create');
   }
 }
