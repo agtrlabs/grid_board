@@ -40,7 +40,6 @@ class _GridCellState extends State<GridCell> {
 
   @override
   Widget build(BuildContext context) {
-    print('gridCell Build!');
     Widget currentChild = widget.gridCellChildMap[currentStatus]!;
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),

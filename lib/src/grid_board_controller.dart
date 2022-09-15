@@ -3,11 +3,19 @@ import 'package:flutter/material.dart';
 import '../grid_board.dart';
 
 class GridBoardController extends ChangeNotifier {
-  List<GridCell> cells = [];
-  List<MoveToData> moveToList = [];
+  List<GridCell> _cells = [];
+
+  /// List of cells
+  List<GridCell> get cells => _cells;
+
+  final List<MoveToData> _moveToList = [];
+
+  List<MoveToData> get moveToList => _moveToList;
+
+  final Map<int, double> _rotation = {};
 
   /// Map for "Gridcell index" to "rotation"
-  Map<int, double> rotation = {};
+  Map<int, double> get rotation => _rotation;
 
   /// Map for "Gridcell index" to "Position index"
   Map<int, int> cellPositions = {};
@@ -16,7 +24,7 @@ class GridBoardController extends ChangeNotifier {
 
   void moveItem(int fromIndex, int toIndex,
       {Curve curve = Curves.elasticInOut}) {
-    moveToList.add(MoveToData(fromIndex, toIndex, curve: curve));
+    _moveToList.add(MoveToData(fromIndex, toIndex, curve: curve));
     cellPositions[fromIndex] = toIndex;
     notifyListeners();
   }
@@ -31,15 +39,14 @@ class GridBoardController extends ChangeNotifier {
   }
 
   void updateMoved(MoveToData moved) {
-    moveToList.removeWhere((element) => element == moved);
-    var temp;
-    temp = cells[moved.item];
+    _moveToList.removeWhere((element) => element == moved);
+    var temp = cells[moved.item];
     cells[moved.item] = cells[moved.to];
     cells[moved.to] = temp;
   }
 
   void resetCells(int cellCount) {
-    cells = List.generate(
+    _cells = List.generate(
       cellCount,
       (index) => GridCell(
         gridCellChildMap: {
@@ -74,7 +81,7 @@ class GridBoardController extends ChangeNotifier {
   // returns where to move the element at fromIndex
   // if it doesn't in te moveToList function returns -1
   int whereToMove(int fromIndex) {
-    return moveToList
+    return _moveToList
         .firstWhere((e) => e.item == fromIndex,
             orElse: () => MoveToData(fromIndex, -1))
         .to;
@@ -102,10 +109,8 @@ class GridBoardController extends ChangeNotifier {
     if (cells == null) {
       resetCells(gridBoardProperties.gridSize.cellCount);
     } else {
-      this.cells = cells;
+      _cells = cells;
     }
     initialPositions();
-
-    print('gridBoardController Create');
   }
 }
