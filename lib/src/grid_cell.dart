@@ -3,6 +3,8 @@ import 'grid_cell_status.dart';
 
 typedef GridCellBuilder = Widget Function(GridCellStatus status);
 
+/// GridCell has multiple child widgets which defined with [gridCellChildMap]
+/// When the [GridCellStatus] changed, a transition effect applied to switch between childs.
 class GridCell extends StatefulWidget {
   final GridCellStatus status;
   GridCell({
@@ -13,7 +15,10 @@ class GridCell extends StatefulWidget {
   }) : super(key: key);
 
   final Duration animatiodDuration;
+  
+  /// Map of child widgets paired with one [GridCellStatus].
   final Map<GridCellStatus, Widget> gridCellChildMap;
+  
   @override
   State<GridCell> createState() => myAppState;
 
@@ -40,6 +45,8 @@ class _GridCellState extends State<GridCell> {
 
   @override
   Widget build(BuildContext context) {
+    
+    //TODO: check is currentStatus defined
     Widget currentChild = widget.gridCellChildMap[currentStatus]!;
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
