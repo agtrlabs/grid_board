@@ -15,7 +15,7 @@ class GridBoard extends StatefulWidget {
   final ValueChanged<GridTapDetails>? onTap;
   final GridBoardController controller;
 
-  /// show border box
+  /// Debug mode will show border box of cells 
   final bool debugMode;
 
   const GridBoard({
@@ -101,25 +101,12 @@ class _GridBoardState extends State<GridBoard> {
     }
 
     widget.controller.addListener(() {
-      /*//check cells for move
-      for (var i = 0; i < indexLocations.length; i++) {
-        int toMove = widget.controller.whereToMove(i);
-        if (toMove >= 0) {
-          Offset newPosition = indexLocations[toMove];
-          setState(() {
-            cellPositions[i] = Offset(newPosition.dx, newPosition.dy);
-          });
-        }
-      }*/
-
+ 
       //check cells to move
       widget.controller.cellPositions.forEach((idx, newIdx) {
-        // debugPrint("controller positions --- {$idx: $newIdx}");
-        // debugPrint("board positions --- {$idx: ${cellPositions[idx]}}");
         setState(() {
           Offset newPosition = indexLocations[newIdx];
           cellPositions[idx] = newPosition;
-          // debugPrint("new positions --- {$idx: ${cellPositions[idx]}}");
         });
       });
 
@@ -129,8 +116,7 @@ class _GridBoardState extends State<GridBoard> {
           cellRotations[idx] = turn;
         });
       });
-
-      debugPrint("Controller notified");
+      
     });
   }
 
@@ -166,11 +152,6 @@ class _GridBoardState extends State<GridBoard> {
         _tapUpDetails = details;
       },
       behavior: HitTestBehavior.opaque,
-      // child: Container(
-      //   width: widget.size.width,
-      //   height: widget.size.height,
-      //   color: Color(0x00000000),
-      // ),
     );
   }
 
