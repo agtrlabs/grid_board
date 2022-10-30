@@ -11,10 +11,10 @@ class GridCell extends StatefulWidget {
     Key? key,
     required this.gridCellChildMap,
     this.status = GridCellStatus.initial,
-    this.animatiodDuration = const Duration(milliseconds: 1000),
+    this.animationDuration = const Duration(milliseconds: 500),
   }) : super(key: key);
 
-  final Duration animatiodDuration;
+  final Duration animationDuration;
   
   /// Map of child widgets paired with one [GridCellStatus].
   final Map<GridCellStatus, Widget> gridCellChildMap;
@@ -22,7 +22,7 @@ class GridCell extends StatefulWidget {
   @override
   State<GridCell> createState() => myAppState;
 
-  final _GridCellState myAppState = _GridCellState();
+  final myAppState = _GridCellState();
 
   void updateStatus(GridCellStatus status) {
     myAppState.updateStatus(status);
@@ -49,7 +49,7 @@ class _GridCellState extends State<GridCell> {
     //TODO: check is currentStatus defined
     Widget currentChild = widget.gridCellChildMap[currentStatus]!;
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
+      duration: widget.animationDuration,
       child: currentChild,
     );
   }
