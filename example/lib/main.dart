@@ -4,10 +4,9 @@ import 'package:flutter/services.dart';
 import 'home_page.dart';
 
 void main() {
-
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-     //SystemUiOverlay.bottom, //This line is used for showing the bottom bar
+    //SystemUiOverlay.bottom, //This line is used for showing the bottom bar
   ]);
 
   runApp(const MyApp());
@@ -27,4 +26,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -2,6 +2,6 @@
 class GridSize {
   final int colCount;
   final int rowCount;
-  int get cellCount => colCount*rowCount;
+  int get cellCount => colCount * rowCount;
   const GridSize(this.colCount, this.rowCount);
 }
