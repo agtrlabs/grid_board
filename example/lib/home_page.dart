@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
           Center(
             child: Text(
               'Grid Board Test',
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
           ),
           SizedBox.square(
@@ -72,7 +72,6 @@ class HomePage extends StatelessWidget {
             child: GridBoard(
               debugMode: false,
               controller: gridBoardController,
-              gridSize: gridSize,
               margin: 2,
               onTap: (details) {
                 debugPrint("index: ${details.index}");

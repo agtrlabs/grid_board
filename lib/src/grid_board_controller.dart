@@ -97,7 +97,8 @@ class GridBoardController extends ChangeNotifier {
   }
 
   void updateCellStatus(int index, GridCellStatus status) {
-    cells[index].updateStatus(status);
+    final cell = cells[index];
+    if (cell.status != status) cell.updateStatus(status);
   }
 
   Map<GridPosition, CellValue> values() {

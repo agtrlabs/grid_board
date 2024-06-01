@@ -15,10 +15,10 @@ class GridCell extends StatefulWidget {
   }) : super(key: key);
 
   final Duration animationDuration;
-  
+
   /// Map of child widgets paired with one [GridCellStatus].
   final Map<GridCellStatus, Widget> gridCellChildMap;
-  
+
   @override
   State<GridCell> createState() => myAppState;
 
@@ -45,7 +45,6 @@ class _GridCellState extends State<GridCell> {
 
   @override
   Widget build(BuildContext context) {
-    
     //TODO: check is currentStatus defined
     Widget currentChild = widget.gridCellChildMap[currentStatus]!;
     return AnimatedSwitcher(

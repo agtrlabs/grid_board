@@ -11,7 +11,7 @@ class GridPosition {
     return "GridPosition[columnIndex:$columnIndex, rowIndex:$rowIndex]";
   }
 
-  int toIndex(GridSize size){
+  int toIndex(GridSize size) {
     return (size.colCount * rowIndex) + columnIndex;
   }
 

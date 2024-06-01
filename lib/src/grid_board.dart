@@ -10,7 +10,6 @@ import 'grid_board_controller.dart';
 
 class GridBoard extends StatefulWidget {
   final Color backgroundColor;
-  final GridSize gridSize;
   final double margin;
   final ValueChanged<GridTapDetails>? onTap;
   final GridBoardController controller;
@@ -21,12 +20,10 @@ class GridBoard extends StatefulWidget {
   const GridBoard({
     Key? key,
     this.backgroundColor = const Color.fromARGB(58, 19, 19, 19),
-    required this.gridSize,
     this.margin = 2,
     this.onTap,
     required this.controller,
     this.debugMode = false,
-    
   }) : super(key: key);
 
   @override
@@ -41,6 +38,8 @@ class _GridBoardState extends State<GridBoard> {
   late List<double> cellRotations;
   late List<Offset> indexLocations;
   int setter = 0;
+
+  GridSize get gridSize => widget.controller.gridBoardProperties.gridSize;
 
   void _calcInitialCellPositions() {
     if (setter == 0) {
@@ -75,11 +74,9 @@ class _GridBoardState extends State<GridBoard> {
       {required Size cellSize, required Size screenSize}) {
     indexLocations = [];
     final totalWidth =
-        widget.gridSize.colCount * (cellSize.width + widget.margin) +
-            widget.margin;
+        gridSize.colCount * (cellSize.width + widget.margin) + widget.margin;
     final totalHeight =
-        widget.gridSize.rowCount * (cellSize.height + widget.margin) +
-            widget.margin;
+        gridSize.rowCount * (cellSize.height + widget.margin) + widget.margin;
     final extraSpaceHor = ((screenSize.width - totalWidth) / 2 > 0)
         ? (screenSize.width - totalWidth) / 2
         : 0;
@@ -87,8 +84,8 @@ class _GridBoardState extends State<GridBoard> {
         ? (screenSize.height - totalHeight) / 2
         : 0;
 
-    for (var i = 0; i < widget.gridSize.cellCount; i++) {
-      final pos = GridPosition.fromIndex(widget.gridSize, i);
+    for (var i = 0; i < gridSize.cellCount; i++) {
+      final pos = GridPosition.fromIndex(gridSize, i);
 
       double offsetX = extraSpaceHor +
           (pos.columnIndex * cellSize.width) +
@@ -106,8 +103,8 @@ class _GridBoardState extends State<GridBoard> {
         cellSize: const Size(10, 10), screenSize: const Size(50, 50));
     _calcInitialCellPositions();
     super.initState();
-    if (widget.controller.cells.length != widget.gridSize.cellCount) {
-      widget.controller.resetCells(widget.gridSize.cellCount);
+    if (widget.controller.cells.length != gridSize.cellCount) {
+      widget.controller.resetCells(gridSize.cellCount);
     }
 
     widget.controller.addListener(() {
@@ -151,7 +148,7 @@ class _GridBoardState extends State<GridBoard> {
         if (index >= 0) {
           debugPrint("greater than 0");
           widget.onTap?.call(GridTapDetails(
-              gridPosition: GridPosition.fromIndex(widget.gridSize, index),
+              gridPosition: GridPosition.fromIndex(gridSize, index),
               index: index));
         }
       },
@@ -235,10 +232,10 @@ class _GridBoardState extends State<GridBoard> {
       final size = Size(constraints.maxWidth, constraints.maxHeight);
       Size cellSize() {
         double space = 0;
-        space = (widget.gridSize.colCount + 1) * widget.margin;
-        var cellWidth = (size.width - space) / widget.gridSize.colCount;
-        space = (widget.gridSize.rowCount + 1) * widget.margin;
-        var cellHeight = (size.height - space) / widget.gridSize.rowCount;
+        space = (gridSize.colCount + 1) * widget.margin;
+        var cellWidth = (size.width - space) / gridSize.colCount;
+        space = (gridSize.rowCount + 1) * widget.margin;
+        var cellHeight = (size.height - space) / gridSize.rowCount;
         double square = min(cellWidth, cellHeight);
         return Size(square, square);
       }
