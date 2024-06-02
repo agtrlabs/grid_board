@@ -2,6 +2,7 @@ library grid_board;
 
 export 'src/grid_board.dart';
 export 'src/grid_board_controller.dart';
+export 'src/grid_cell_controller.dart';
 export 'src/value_objects/grid_size.dart';
 export 'src/value_objects/grid_position.dart';
 export 'src/value_objects/grid_tap_details.dart';
