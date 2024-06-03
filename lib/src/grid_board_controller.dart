@@ -22,15 +22,21 @@ class GridBoardController extends ChangeNotifier {
 
   final GridBoardProperties gridBoardProperties;
 
-  void moveItem(int fromIndex, int toIndex,
-      {Curve curve = Curves.elasticInOut}) {
+  void moveItem(
+    int fromIndex,
+    int toIndex, {
+    Curve curve = Curves.elasticInOut,
+  }) {
     _moveToList.add(MoveToData(fromIndex, toIndex, curve: curve));
     cellPositions[fromIndex] = toIndex;
     notifyListeners();
   }
 
-  void moveAllAt(int fromIndex, int toIndex,
-      {Curve curve = Curves.elasticInOut}) {
+  void moveAllAt(
+    int fromIndex,
+    int toIndex, {
+    Curve curve = Curves.elasticInOut,
+  }) {
     cellPositions.forEach((key, value) {
       if (value == fromIndex) {
         moveItem(key, toIndex);
@@ -49,6 +55,7 @@ class GridBoardController extends ChangeNotifier {
     _cells = List.generate(
       cellCount,
       (index) => GridCell(
+        controller: GridCellController(),
         gridCellChildMap: {
           GridCellStatus.initial: Container(
             key: ValueKey(index + 1),
@@ -98,15 +105,32 @@ class GridBoardController extends ChangeNotifier {
 
   void updateCellStatus(int index, GridCellStatus status) {
     final cell = cells[index];
-    if (cell.status != status) cell.updateStatus(status);
+    if (cell.controller.status != status) cell.controller.updateStatus(status);
   }
 
   Map<GridPosition, CellValue> values() {
     return {};
   }
 
-  GridBoardController(
-      {required this.gridBoardProperties, List<GridCell>? cells}) {
+  void animateCell(
+    int cellIndex, {
+    bool repeat = false,
+    int? repeatCount,
+    required CellAnimationStyle animationStyle,
+  }) {
+    final cell = cells[cellIndex];
+    cell.controller.setAnimationStyle(
+      repeat: repeat,
+      repeatCount: repeatCount,
+      animationStyle: animationStyle,
+    );
+    cell.controller.startAnimation();
+  }
+
+  GridBoardController({
+    required this.gridBoardProperties,
+    List<GridCell>? cells,
+  }) {
     if (cells == null) {
       resetCells(gridBoardProperties.gridSize.cellCount);
     } else {

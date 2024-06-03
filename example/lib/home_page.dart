@@ -3,18 +3,30 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:grid_board/grid_board.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final rnd = Random();
-    GridSize gridSize = const GridSize(7, 9);
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late GridSize gridSize;
+  late GridBoardController gridBoardController;
+
+  final rnd = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    gridSize = const GridSize(7, 9);
     final cells = List<GridCell>.generate(gridSize.cellCount, (index) {
       final char = String.fromCharCode(rnd.nextInt(26) + 65);
       return GridCell(
-        status:
-            rnd.nextBool() ? GridCellStatus.initial : GridCellStatus.selected,
+        controller: GridCellController(
+          status:
+              rnd.nextBool() ? GridCellStatus.initial : GridCellStatus.selected,
+        ),
         gridCellChildMap: {
           GridCellStatus.initial: Container(
             key: ValueKey(index + 1),
@@ -47,11 +59,14 @@ class HomePage extends StatelessWidget {
     });
     GridBoardProperties gridBoardProperties =
         GridBoardProperties(gridSize: gridSize);
-    GridBoardController gridBoardController = GridBoardController(
+    gridBoardController = GridBoardController(
       gridBoardProperties: gridBoardProperties,
       cells: cells,
     );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     /*for (var i = 0; i < gridSize.cellCount; i++) {
       var cell = GridCell(index: i, stringValue: i.toStringAsFixed(2), child: );
       gridBoardController.cells[i] = cell;
@@ -76,7 +91,18 @@ class HomePage extends StatelessWidget {
               onTap: (details) {
                 debugPrint("index: ${details.index}");
                 debugPrint("grid position: ${details.gridPosition}");
-                gridBoardController.rotate(details.index);
+                gridBoardController.animateCell(
+                  details.index,
+                  repeat: true,
+                  repeatCount: 10,
+                  animationStyle: PulseAnimation(
+                    pulseOpacity: 0,
+                    pulseSize: 1.5,
+                    pulseInterval: const Duration(seconds: 2),
+                    pulseColor: Colors.green,
+                  ),
+                );
+                // gridBoardController.rotate(details.index);
               },
             ),
           ),

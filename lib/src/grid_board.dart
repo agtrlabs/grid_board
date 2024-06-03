@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-import 'value_objects/grid_position.dart';
-import 'value_objects/grid_tap_details.dart';
-import 'value_objects/grid_size.dart';
 import 'grid_board_controller.dart';
+import 'value_objects/grid_position.dart';
+import 'value_objects/grid_size.dart';
+import 'value_objects/grid_tap_details.dart';
 
 class GridBoard extends StatefulWidget {
   final Color backgroundColor;
@@ -70,8 +70,10 @@ class _GridBoardState extends State<GridBoard> {
   }
 
   /// calculates screen positions of index cells
-  void _calcIndexCellPositions(
-      {required Size cellSize, required Size screenSize}) {
+  void _calcIndexCellPositions({
+    required Size cellSize,
+    required Size screenSize,
+  }) {
     indexLocations = [];
     final totalWidth =
         gridSize.colCount * (cellSize.width + widget.margin) + widget.margin;
@@ -100,7 +102,9 @@ class _GridBoardState extends State<GridBoard> {
   @override
   initState() {
     _calcIndexCellPositions(
-        cellSize: const Size(10, 10), screenSize: const Size(50, 50));
+      cellSize: const Size(10, 10),
+      screenSize: const Size(50, 50),
+    );
     _calcInitialCellPositions();
     super.initState();
     if (widget.controller.cells.length != gridSize.cellCount) {
@@ -224,6 +228,7 @@ class _GridBoardState extends State<GridBoard> {
   }
 
   Size? _cellSize;
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (_, constraints) {
