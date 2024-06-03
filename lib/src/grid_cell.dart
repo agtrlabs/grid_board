@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:grid_board/src/grid_cell_animation_pumpers.dart';
 import 'package:grid_board/src/grid_cell_controller.dart';
+import 'package:grid_board/src/value_objects/animation_style.dart';
 
 import 'grid_cell_status.dart';
 
@@ -7,7 +9,7 @@ typedef GridCellBuilder = Widget Function(GridCellStatus status);
 
 /// GridCell has multiple child widgets which defined with [gridCellChildMap]
 /// When the [GridCellStatus] changed, a transition effect applied to switch between childs.
-class GridCell extends StatelessWidget {
+class GridCell extends StatefulWidget {
   const GridCell({
     required this.gridCellChildMap,
     required this.controller,
@@ -20,46 +22,69 @@ class GridCell extends StatelessWidget {
   final GridCellController controller;
 
   @override
+  State<GridCell> createState() => _GridCellState();
+}
+
+class _GridCellState extends State<GridCell> with TickerProviderStateMixin {
+  late GridCellAnimationPumpers pumpers;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.initAnimationController(this);
+    pumpers = GridCellAnimationPumpers(widget.controller);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-        listenable: controller,
+    return AnimatedBuilder(
+        animation: widget.controller.animationController,
         builder: (context, _) {
           Widget currentChild =
-              gridCellChildMap[controller.status] ?? Container();
-          return AnimatedSwitcher(
-            duration: animationDuration,
-            child: currentChild,
-          );
+              widget.gridCellChildMap[widget.controller.status] ?? Container();
+          switch (widget.controller.animationStyle) {
+            case PulseAnimation(
+                duration: final duration,
+                pulseInterval: final pulseInterval,
+                pulseOpacity: final pulseOpacity,
+                pulseColor: final pulseColor,
+                pulseSize: final pulseSize,
+                curve: final curve,
+              ):
+              currentChild = pumpers.applyPulseAnimation(
+                currentChild,
+                PulseAnimation(
+                  duration: duration,
+                  pulseInterval: pulseInterval,
+                  pulseOpacity: pulseOpacity,
+                  pulseColor: pulseColor,
+                  pulseSize: pulseSize,
+                  curve: curve,
+                ),
+              );
+            case null:
+              break;
+            case RotateAnimation():
+            // TODO: Handle this case.
+            case ScaleAnimation():
+            // TODO: Handle this case.
+            case SlideAnimation():
+            // TODO: Handle this case.
+            case SpinAnimation():
+            // TODO: Handle this case.
+            case ZoomAnimation():
+            // TODO: Handle this case.
+            case CustomAnimation():
+            // TODO: Handle this case.
+          }
+          return ListenableBuilder(
+              listenable: widget.controller,
+              builder: (context, _) {
+                return AnimatedSwitcher(
+                  duration: widget.animationDuration,
+                  child: currentChild,
+                );
+              });
         });
   }
 }
-/*
-class GridCell extends {
-  Widget _child = Container();
-  Widget get child => _child;
-  GridCellBuilder builder;
-  GridCell({
-    required this.builder,
-  });
-
-  void updateStatus(GridCellStatus status) {
-    Widget newChild = builder(status);
-
-  }
-}
-
-class LetterBox extends GridCell {
-  LetterBox({required super.index, super.stringValue}) {
-    child = DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0x66AABBCC),
-          border: Border.all(
-            color: Color(0xFF111111),
-            width: 3,
-          ),
-        ),
-        child: FittedBox(child: Text(stringValue)));
-  }
-}
-*/
