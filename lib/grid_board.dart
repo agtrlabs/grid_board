@@ -11,3 +11,4 @@ export 'src/grid_board_properties.dart';
 export 'src/grid_cell_status.dart';
 export 'src/value_objects/cell_value.dart';
 export 'src/grid_cell.dart';
+export 'src/value_objects/animation_style.dart';
