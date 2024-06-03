@@ -112,8 +112,25 @@ class GridBoardController extends ChangeNotifier {
     return {};
   }
 
-  GridBoardController(
-      {required this.gridBoardProperties, List<GridCell>? cells}) {
+  void animateCell(
+    int cellIndex, {
+    bool repeat = false,
+    int? repeatCount,
+    required CellAnimationStyle animationStyle,
+  }) {
+    final cell = cells[cellIndex];
+    cell.controller.setAnimationStyle(
+      repeat: repeat,
+      repeatCount: repeatCount,
+      animationStyle: animationStyle,
+    );
+    cell.controller.startAnimation();
+  }
+
+  GridBoardController({
+    required this.gridBoardProperties,
+    List<GridCell>? cells,
+  }) {
     if (cells == null) {
       resetCells(gridBoardProperties.gridSize.cellCount);
     } else {
