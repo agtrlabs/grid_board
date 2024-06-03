@@ -91,7 +91,18 @@ class _HomePageState extends State<HomePage> {
               onTap: (details) {
                 debugPrint("index: ${details.index}");
                 debugPrint("grid position: ${details.gridPosition}");
-                gridBoardController.rotate(details.index);
+                gridBoardController.animateCell(
+                  details.index,
+                  repeat: true,
+                  repeatCount: 10,
+                  animationStyle: PulseAnimation(
+                    pulseOpacity: 0,
+                    pulseSize: 1.5,
+                    pulseInterval: const Duration(seconds: 2),
+                    pulseColor: Colors.green,
+                  ),
+                );
+                // gridBoardController.rotate(details.index);
               },
             ),
           ),
