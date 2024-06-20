@@ -12,14 +12,14 @@ class GridCellAnimationPumpers {
     return Stack(
       children: [
         FadeTransition(
-          opacity: Tween(begin: 1.0, end: pulse.pulseOpacity).animate(
+          opacity: Tween<double>(begin: 1, end: pulse.pulseOpacity).animate(
             CurvedAnimation(
               parent: controller.animationController,
               curve: pulse.curve,
             ),
           ),
           child: ScaleTransition(
-            scale: Tween(begin: 1.0, end: pulse.pulseSize).animate(
+            scale: Tween<double>(begin: 1, end: pulse.pulseSize).animate(
               CurvedAnimation(
                 parent: controller.animationController,
                 curve: pulse.curve,
@@ -35,7 +35,7 @@ class GridCellAnimationPumpers {
               constraints: const BoxConstraints.expand(),
               decoration: BoxDecoration(
                 color: pulse.pulseColor,
-                borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+                borderRadius: const BorderRadius.all(Radius.circular(2)),
               ),
             ),
           ),
