@@ -44,7 +44,6 @@ class GridCellController extends ChangeNotifier {
       switch (_animationStyle) {
         case PulseAnimation():
           pulseStatusHandler(status);
-          break;
         case null:
           break;
         case RotateAnimation():
@@ -78,7 +77,8 @@ class GridCellController extends ChangeNotifier {
         // we want to use the pulse.interval to determine the delay
         // before the next pulse
 
-        final pulseInterval = (_animationStyle as PulseAnimation).pulseInterval;
+        final pulseInterval =
+            (_animationStyle! as PulseAnimation).pulseInterval;
         Future.delayed(pulseInterval, () {
           _animationController.reverse(from: .00001);
         });
@@ -87,9 +87,9 @@ class GridCellController extends ChangeNotifier {
   }
 
   void setAnimationStyle({
+    required CellAnimationStyle animationStyle,
     bool repeat = false,
     int? repeatCount,
-    required CellAnimationStyle animationStyle,
   }) {
     _animationStyle = animationStyle;
     _repeat = repeat;
