@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
 class MoveToData {
+  const MoveToData(this.item, this.to, {this.curve = Curves.elasticInOut});
+
   /// id / index of GridCell item
   final int item;
 
@@ -8,7 +10,6 @@ class MoveToData {
   final int to;
   // animation curve
   final Curve curve;
-  const MoveToData(this.item, this.to, {this.curve = Curves.elasticInOut});
 
   @override
   bool operator ==(Object other) =>

@@ -1,4 +1,4 @@
-import 'grid_position.dart';
+import 'package:grid_board/src/value_objects/grid_position.dart';
 
 class GridTapDetails {
   GridTapDetails({
