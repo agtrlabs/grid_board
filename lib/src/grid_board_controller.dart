@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../grid_board.dart';
+import 'package:grid_board/grid_board.dart';
 
 class GridBoardController extends ChangeNotifier {
+  GridBoardController({
+    required this.gridBoardProperties,
+    List<GridCell>? cells,
+  }) {
+    if (cells == null) {
+      resetCells(gridBoardProperties.gridSize.cellCount);
+    } else {
+      _cells = cells;
+    }
+    initialPositions();
+  }
   List<GridCell> _cells = [];
 
   /// List of cells
@@ -46,7 +57,7 @@ class GridBoardController extends ChangeNotifier {
 
   void updateMoved(MoveToData moved) {
     _moveToList.removeWhere((element) => element == moved);
-    var temp = cells[moved.item];
+    final temp = cells[moved.item];
     cells[moved.item] = cells[moved.to];
     cells[moved.to] = temp;
   }
@@ -64,10 +75,11 @@ class GridBoardController extends ChangeNotifier {
             child: FittedBox(child: Text('$index')),
           ),
           GridCellStatus.selected: Container(
-              width: 800,
-              key: ValueKey(index + 2),
-              color: Colors.green,
-              child: FittedBox(child: Text('${index + 16}'))),
+            width: 800,
+            key: ValueKey(index + 2),
+            color: Colors.green,
+            child: FittedBox(child: Text('${index + 16}')),
+          ),
         },
       ),
     );
@@ -89,8 +101,10 @@ class GridBoardController extends ChangeNotifier {
   // if it doesn't in te moveToList function returns -1
   int whereToMove(int fromIndex) {
     return _moveToList
-        .firstWhere((e) => e.item == fromIndex,
-            orElse: () => MoveToData(fromIndex, -1))
+        .firstWhere(
+          (e) => e.item == fromIndex,
+          orElse: () => MoveToData(fromIndex, -1),
+        )
         .to;
   }
 
@@ -114,9 +128,9 @@ class GridBoardController extends ChangeNotifier {
 
   void animateCell(
     int cellIndex, {
+    required CellAnimationStyle animationStyle,
     bool repeat = false,
     int? repeatCount,
-    required CellAnimationStyle animationStyle,
   }) {
     final cell = cells[cellIndex];
     cell.controller.setAnimationStyle(
@@ -125,17 +139,5 @@ class GridBoardController extends ChangeNotifier {
       animationStyle: animationStyle,
     );
     cell.controller.startAnimation();
-  }
-
-  GridBoardController({
-    required this.gridBoardProperties,
-    List<GridCell>? cells,
-  }) {
-    if (cells == null) {
-      resetCells(gridBoardProperties.gridSize.cellCount);
-    } else {
-      _cells = cells;
-    }
-    initialPositions();
   }
 }
