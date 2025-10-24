@@ -128,12 +128,6 @@ class _GridBoardState extends State<GridBoard> {
     });
   }
 
-  @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-
   TapUpDetails _tapUpDetails = TapUpDetails(kind: PointerDeviceKind.unknown);
 
   Widget _gestureDetector({required Size cellSize}) {
