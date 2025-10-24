@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-
 import 'package:grid_board/src/grid_board_controller.dart';
 import 'package:grid_board/src/value_objects/grid_position.dart';
 import 'package:grid_board/src/value_objects/grid_size.dart';
@@ -17,6 +16,7 @@ class GridBoard extends StatefulWidget {
     this.onTap,
     this.debugMode = false,
   });
+
   final Color backgroundColor;
   final double margin;
   final ValueChanged<GridTapDetails>? onTap;
@@ -139,7 +139,6 @@ class _GridBoardState extends State<GridBoard> {
   Widget _gestureDetector({required Size cellSize}) {
     return GestureDetector(
       onTap: () {
-        debugPrint('Tapped!');
         final tapped = _tapUpDetails.localPosition;
         final index = cellPositions.indexWhere((element) {
           return (element.dx <= tapped.dx) &&
@@ -149,7 +148,6 @@ class _GridBoardState extends State<GridBoard> {
         });
 
         if (index >= 0) {
-          debugPrint('greater than 0');
           widget.onTap?.call(
             GridTapDetails(
               gridPosition: GridPosition.fromIndex(gridSize, index),
@@ -231,13 +229,12 @@ class _GridBoardState extends State<GridBoard> {
   }
 
   Size? _cellSize;
+  Size? _screenSize;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (_, constraints) {
-        debugPrint('Board rebuilt');
-
         final size = Size(constraints.maxWidth, constraints.maxHeight);
         Size cellSize() {
           var space = 0.0;
@@ -249,13 +246,14 @@ class _GridBoardState extends State<GridBoard> {
           return Size(square, square);
         }
 
-        if (_cellSize != cellSize()) {
+        if (_cellSize != cellSize() || _screenSize != size) {
           _calcIndexCellPositions(
             cellSize: cellSize(),
-            screenSize: Size(constraints.maxWidth, constraints.maxHeight),
+            screenSize: size,
           );
           _calcInitialCellPositions();
           _cellSize = cellSize();
+          _screenSize = size;
         }
         return Stack(
           children: rebuild(cellSize: cellSize(), size: size),
